@@ -55,6 +55,14 @@ void sethandler(void (*f)(int), int sigNo)
     if (-1 == sigaction(sigNo, &act, NULL))
         ERR("sigaction");
 }
+void sethandleradv(int sig, void (*func)(int,siginfo_t*, void*))
+{
+    struct sigaction sa;
+    memset(&sa,0,sizeof(struct sigaction));
+    sa.sa_sigaction = func;
+    sa.sa_flags = SA_SIGINFO;
+    sigaction(sig,&sa,NULL);
+}
 
 void ms_sleep(unsigned int milli)
 {
